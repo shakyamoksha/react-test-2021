@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useCallback } from "react";
 import { Formik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Flex, Header } from "../styled";
 import FormField from "./FormField";
 import Select from "./Select";
 import FormButtons from "./FormButtons";
 import formValidationSchema from "./formValidationSchema";
-import { saveNewEmployee } from "../../redux/employees/actionCreators";
+import { saveNewEmployee, editEmployee } from "../../redux/employees/actionCreators";
 
 const Create = ({
   match: {
@@ -18,11 +18,33 @@ const Create = ({
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const employees = useSelector(state => state.employees.employees_records);
+  const existingEmployee = employees.find(e => e.id.toString() === id);
+
+  console.log(existingEmployee);
+
+  // Map existing employee versus new values
+  const initialValues = existingEmployee || {
+    firstName: "",
+    surname: "",
+    email: "",
+    age: "",
+    jobTitle: "",
+    jobStatus: "",
+  };
+
   const submitForm = useCallback(
     employee => {
       // console.log(employee);
 
-      dispatch(saveNewEmployee(employee));
+      // checking if employee exists, hence will do update instead of add
+      if (existingEmployee) {
+        console.log(true);
+        dispatch(editEmployee(employee));
+      } else {
+        console.log(false);
+        dispatch(saveNewEmployee(employee));
+      }
 
       history.goBack();
     },
@@ -38,18 +60,11 @@ const Create = ({
 
   return (
     <>
-      <Header>Create new employee</Header>
+      <Header>{existingEmployee ? "Update Employee" : "Create New Employee"}</Header>
       <Formik
         validationSchema={formValidationSchema}
         onSubmit={submitForm}
-        initialValues={{
-          firstName: "John",
-          surname: "Smith",
-          email: "john.smith@outlook.com",
-          age: "45",
-          jobTitle: "Product Owner",
-          jobStatus: "",
-        }}
+        initialValues={initialValues}
       >
         <Flex alignItems="center" justifyContent="center" height="100%">
           <Flex alignItems="left" direction="column" width="300px">

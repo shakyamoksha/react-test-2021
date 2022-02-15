@@ -3,6 +3,7 @@
 import React from "react";
 import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -60,7 +61,9 @@ const View = () => {
                 <TableCell align="right">
                   <Stack direction="row" spacing={1}>
                     <IconButton aria-label="delete" color="success">
-                      <EditIcon onClick={() => dispatch(removeEmployee(employee.id))} />
+                      <Link to={`/edit/${employee.id}`}>
+                        <EditIcon />
+                      </Link>
                     </IconButton>
 
                     <IconButton aria-label="edit" color="secondary">

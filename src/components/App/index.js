@@ -18,6 +18,7 @@ const App = () => {
       <AppWrapper>
         <Switch>
           <Route path="/create" component={Create} />
+          <Route path="/edit/:id" component={Create} />
           <Route path="/view" component={View} />
           <Route path="/" component={Overview} />
         </Switch>
